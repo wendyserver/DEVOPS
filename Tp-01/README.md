@@ -1,0 +1,1 @@
+1- we created an image for postgre sql
