@@ -42,7 +42,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./Tp-01/simpleapi
-          push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simpleapi:latest
           push: ${{ github.ref == 'refs/heads/main' }}
 
@@ -50,7 +49,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./Tp-01
-          push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-database:latest
           push: ${{ github.ref == 'refs/heads/main' }}
 
@@ -58,6 +56,5 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./Tp-01/Last_part-html
-          push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
           push: ${{ github.ref == 'refs/heads/main' }}
