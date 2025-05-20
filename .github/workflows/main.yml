@@ -24,4 +24,5 @@ jobs:
 
       # Build and test the app with Maven
       - name: Build and test with Maven
-        run: mvn clean verify
+        run: mvn -f Tp-01/simpleapi/pom.xml clean verify
+
