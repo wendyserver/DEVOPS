@@ -1,0 +1,31 @@
+
+
+services:
+  backend:
+    build: ./simpleapi  # Path to the backend Dockerfile 
+    networks:
+      - app-network
+    depends_on:
+      - database
+
+  database:
+    build: .  #  PostgreSQL image
+    volumes:
+      - db-data:/var/lib/postgresql/data  # the path to the volume
+    networks:
+      - app-network  # the name of the network
+
+  httpd:
+    build: ./Last_part-html  # Path to the Apache Dockerfile
+    ports:
+      - "99:80"      # Exposition of the container's port 80 on the local's  port 99
+    networks:
+      - app-network
+    depends_on:
+      - backend
+
+networks:  # creation of network that will allow containers to communicate
+  app-network:       
+
+volumes:  # creation of volume which will allow to save the data
+  db-data:           
