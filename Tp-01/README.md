@@ -1,3 +1,6 @@
+
+                                                                Day1 Questions: Docker-compose
+
 1-1 For which reason is it better to run the container with a flag -e to give the environment variables rather than put them directly in the Dockerfile?
 R: Passing environment variables with `-e` at runtime keeps sensitive data out of the image and makes the container more flexible and secure.
 
@@ -49,3 +52,21 @@ R:
 
 1-10 Why do we put our images into an online repo?
 R:We put our images into an online repository to enable reuse across different environments and machines, and to allow other team members or users to easily access and use them as base images for their own projects.
+
+
+                                                                Day2: Questions : GIT ACTIONS
+
+
+2-1 What are Testcontainers?
+Testcontainers are Java tools that let you use Docker containers during testing. For example, they can start a PostgreSQL container automatically when you run your tests. It is helpful to test with real services without installing them manually.
+
+ 2-2 Why do we need to use secured variables?
+We use secured variables to keep secret information (like passwords or API keys) safe. Instead of writing them in your code, you store them safely in GitHub, so others can’t see or steal them.
+
+
+2-3 Why did we put needs: build-and-test-backend on this job? 
+We put needs: build-and-test-backend on this job to make sure the build-and-push-docker-image job only runs after the backend build and tests have successfully completed.This way, If the tests fail, the Docker image won’t be built or pushed. It ensures the pipeline runs in the right order, preventing unnecessary steps when the code isn’t ready.
+
+2-4 For what purpose do we need to push docker images?
+To make our application available remotely, on any environment.
+By pushing the image to Docker Hub, we can then easily pull it to a production server, a cloud platform, or any other environment to quickly deploy and run the application, without having to rebuild the entire project.
