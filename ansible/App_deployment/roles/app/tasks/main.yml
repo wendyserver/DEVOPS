@@ -1,5 +1,11 @@
 
 # tasks file for roles/app
+
+- name: Remove old database container
+  docker_container:
+    name: backend
+    state: absent
+
 - name: Launch API app container
   docker_container:
     name: backend

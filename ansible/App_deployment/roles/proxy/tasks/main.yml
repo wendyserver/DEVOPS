@@ -1,3 +1,8 @@
+- name: Remove old database container
+  docker_container:
+    name: my_proxy
+    state: absent
+
 - name: Launch HTTPD proxy container
   docker_container:
     name: my_proxy
