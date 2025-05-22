@@ -1,4 +1,4 @@
-name: CI devops 2025
+name: CI\CD devops 2025
 
 on:
   push:
@@ -68,3 +68,41 @@ jobs:
           context: ./Tp-01/Last_part-html
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
           push: ${{ github.ref == 'refs/heads/main' }}
+
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-push-docker-image
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to remote server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.REMOTE_SSH_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-database:latest
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
+
+            docker stop my_postgres || true && docker rm my_postgres || true
+            docker stop my_proxy || true && docker rm my_proxy || true
+
+            docker network create app-network || true
+
+            docker run -d \
+              --name my_postgres \
+              --network app-network \
+              -e POSTGRES_USER=usr \
+              -e POSTGRES_PASSWORD=pwd \
+              -e POSTGRES_DB=db \
+              ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-database:latest
+
+            docker run -d \
+              --name my_proxy \
+              --network app-network \
+              -p 80:80 \
+              ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest

@@ -1,0 +1,15 @@
+- hosts: all
+  gather_facts: true
+  become: true
+
+  roles:
+    - docker
+
+#hosts: all: Applies to all hosts in your inventory
+
+#become: true: Uses sudo to run tasks as root
+
+#gather_facts: true: Collects system information (useful for detecting the OS version, architecture, etc.)
+
+#roles:: Includes the docker role, which holds all Docker installation tasks
+

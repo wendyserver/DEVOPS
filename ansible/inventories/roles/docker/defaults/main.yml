@@ -1,0 +1,9 @@
+
+# defaults file for roles/docker
+# Exemples :
+docker_packages:
+  - docker-ce
+
+python_packages:
+  - python3
+  - python3-pip

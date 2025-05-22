@@ -1,0 +1,16 @@
+
+# tasks file for roles/app
+- name: Launch API app container
+  docker_container:
+    name: backend
+    image: wendy2001/tp-devops-simpleapi
+    state: started
+    restart_policy: unless-stopped
+    env:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/db
+      SPRING_DATASOURCE_USERNAME: "usr"
+      SPRING_DATASOURCE_PASSWORD: "pwd"
+      
+    networks:
+      - name: app-network
+    

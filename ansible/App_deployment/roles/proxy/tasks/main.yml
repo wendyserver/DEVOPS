@@ -1,0 +1,10 @@
+- name: Launch HTTPD proxy container
+  docker_container:
+    name: my_proxy
+    image: wendy2001/tp-devops-httpd
+    state: started
+    restart_policy: unless-stopped
+    networks:
+      - name: app-network
+    published_ports:
+      - "80:80"
