@@ -4,6 +4,7 @@
   docker_container:
     name: database
     image: wendy2001/tp-devops-database
+    pull: true
     state: started
     restart_policy: unless-stopped
     env:

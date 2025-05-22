@@ -4,6 +4,7 @@
   docker_container:
     name: backend
     image: wendy2001/tp-devops-simpleapi
+    pull: true
     state: started
     restart_policy: unless-stopped
     env:
