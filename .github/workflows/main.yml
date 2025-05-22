@@ -78,31 +78,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to remote server via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.REMOTE_HOST }}
-          username: ${{ secrets.REMOTE_USER }}
-          key: ${{ secrets.REMOTE_SSH_KEY }}
-          script: |
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-database:latest
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
+      - name: Install Ansible
+        run: |
+          sudo apt update
+          sudo apt install -y ansible sshpass
 
-            docker stop my_postgres || true && docker rm my_postgres || true
-            docker stop my_proxy || true && docker rm my_proxy || true
+      - name: Add SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.REMOTE_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
-            docker network create app-network || true
-
-            docker run -d \
-              --name my_postgres \
-              --network app-network \
-              -e POSTGRES_USER=usr \
-              -e POSTGRES_PASSWORD=pwd \
-              -e POSTGRES_DB=db \
-              ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-database:latest
-
-            docker run -d \
-              --name my_proxy \
-              --network app-network \
-              -p 80:80 \
-              ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
+      - name: Run Ansible Playbook
+        run: |
+          ansible-playbook -i inventories/setup.yml App_deployment/deploy.yml \
+            --private-key ~/.ssh/id_rsa \
+            -u ${{ secrets.REMOTE_USER }} \
+            -e "ansible_host=${{ secrets.REMOTE_HOST }}"
