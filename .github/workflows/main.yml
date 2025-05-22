@@ -91,7 +91,7 @@ jobs:
 
       - name: Run Ansible Playbook
         run: |
-          ansible-playbook -i ansible/inventories/setup.yml ansible/App_deployment/deploy.yml \
+          cd ansible && ansible-playbook -i inventories/setup.yml App_deployment/deploy.yml \
             --private-key ~/.ssh/id_rsa \
             -u ${{ secrets.REMOTE_USER }} \
             -e "ansible_host=${{ secrets.REMOTE_HOST }}"
