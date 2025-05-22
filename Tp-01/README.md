@@ -85,3 +85,18 @@ R:  The main playbook file, install_docker.yml, simply declares the target hosts
 3-3 Document your docker_container tasks configuration.
 
 R:  The deployment process is managed through a main Ansible playbook that includes five key roles: docker, network, db, app, and proxy. The docker role installs Docker CE and its dependencies on the target hosts, ensures the Docker service is started, and installs the Python Docker SDK required for Ansible Docker modules. The network role creates a Docker network named app-network to enable inter-container communication. The db role launches a PostgreSQL container configured with environment variables (POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB) and connects it to the app-network. The app role deploys the backend Spring Boot container using the image wendy2001/tp-devops-simpleapi, setting environment variables for database connectivity (SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME, SPRING_DATASOURCE_PASSWORD), and attaches it to the same network. Finally, the proxy role starts an Apache HTTPD container configured as a reverse proxy, forwarding requests to the backend through the shared Docker network. These roles are executed in this order within the main playbook to ensure Docker is installed, the network is created, the database container is running before the backend application and proxy containers start, thereby providing a coordinated and functional deployment of the services.
+
+Is it really safe to deploy automatically every new image on the hub ? explain. What can I do to make it more secure?
+
+R: Automatically deploying every new image from Docker Hub can be risky if not properly secured and controlled. to make it more secure, we should:
+Use image versioning: Don’t always use :latest. Use specific tags like v1.2.3 and deploy only tested versions.
+
+Implement approvals :Use GitHub Actions environments or protected branches to require human approval before deploying to production.
+
+Enable image signing (Docker Content Trust): Use Docker Content Trust (DCT) to ensure only signed and trusted images are deployed.
+
+Deploy only from trusted sources: Ensure the images are built and pushed only through your CI (not manually pushed by developers).
+
+Scan images for vulnerabilities: Integrate security scanners like Trivy, Snyk, or Docker Hub’s vulnerability scanner into your CI pipeline.
+
+Use secrets securely: Never hardcode secrets in images. Use Docker secrets, Ansible Vault, or environment variables from secure sources.
